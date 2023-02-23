@@ -37,7 +37,7 @@ def get_weather():
   if city is None:
     print('请设置城市')
     return None
-  url = "https://restapi.amap.com/v3/weather/weatherInfo?key=d1f9b23e366207f71f4b6f73ecb07d76&city=" + citycode
+  url = "https://restapi.amap.com/v3/weather/weatherInfo?key=d1f9b23e366207f71f4b6f73ecb07d76&city=" + str(citycode)
   res = requests.get(url).json()
   if res is None:
     return None
