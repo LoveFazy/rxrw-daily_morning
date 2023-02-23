@@ -11,6 +11,7 @@ today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
 
 start_date = os.getenv('START_DATE')
 city = os.getenv('CITY')
+citycode = os.getenv('CITYCODE')
 birthday = os.getenv('BIRTHDAY')
 
 app_id = os.getenv('APP_ID')
@@ -36,11 +37,13 @@ def get_weather():
   if city is None:
     print('请设置城市')
     return None
-  url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
+  url = "https://restapi.amap.com/v3/weather/weatherInfo?key=d1f9b23e366207f71f4b6f73ecb07d76&city=" + citycode
   res = requests.get(url).json()
   if res is None:
     return None
-  weather = res['data']['list'][0]
+  weather = res['lives'][0]
+  print(res)
+  #print(type(res['lives']))
   return weather
 
 # 获取当前日期为星期几
@@ -114,28 +117,12 @@ if __name__ == '__main__':
         "value": weather['humidity'],
         "color": get_random_color()
       },
-      "wind": {
-        "value": weather['wind'],
-        "color": get_random_color()
-      },
-      "air_data": {
-        "value": weather['airData'],
-        "color": get_random_color()
-      },
-      "air_quality": {
-        "value": weather['airQuality'],
+      "winddirection": {
+        "value": weather['winddirection'],
         "color": get_random_color()
       },
       "temperature": {
-        "value": math.floor(weather['temp']),
-        "color": get_random_color()
-      },
-      "highest": {
-        "value": math.floor(weather['high']),
-        "color": get_random_color()
-      },
-      "lowest": {
-        "value": math.floor(weather['low']),
+        "value": weather['temperature'],
         "color": get_random_color()
       },
       "love_days": {
@@ -152,7 +139,8 @@ if __name__ == '__main__':
       },
     }
     count = 0
+    print(data)
     for user_id in user_ids:
-		res = wm.send_template(user_id, template_id, data)
+        res = wm.send_template(user_id, template_id, data)
         count+=1
     print("发送了" + str(count) + "条消息")
